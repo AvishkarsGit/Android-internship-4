@@ -22,6 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Login Flow"
+rootProject.name = "Mini Product"
 include ':app'
-include ':Signup'

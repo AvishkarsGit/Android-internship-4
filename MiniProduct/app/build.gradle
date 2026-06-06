@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace 'com.example.loginflow'
+    namespace 'com.example.miniproduct'
     compileSdk {
-        version = release(37) {
+        version = release(36) {
             minorApiLevel = 1
         }
     }
 
     defaultConfig {
-        applicationId "com.example.loginflow"
+        applicationId "com.example.miniproduct"
         minSdk 24
         targetSdk 36
         versionCode 1
@@ -22,8 +22,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            optimization {
+                enable false
+            }
         }
     }
     compileOptions {
