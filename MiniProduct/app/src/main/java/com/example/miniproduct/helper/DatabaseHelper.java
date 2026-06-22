@@ -5,13 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "products_db";
     private static final String TABLE_NAME = "register";
     private static final String COL_ID = "id";
@@ -28,15 +29,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + COL_ID + " INT PRIMARY KEY AUTOINCREMENT," + COL_NAME + " TEXT," + COL_USER + " TEXT," + COL_PASSWORD + " TEXT" + ");");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_NAME + " TEXT," + COL_USER + " TEXT," + COL_PASSWORD + " TEXT" + ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String query = "DROP TABLE IF EXISTS " + TABLE_NAME;
-        db.execSQL(query);
+        Log.d("DATABASE_ONUPGRADE", "OLD DB VERSION:"+oldVersion);
+        Log.d("DATABASE_ONUPGRADE", "NEW DB VERSION:"+newVersion);
+       if (oldVersion < 4) {
+           db.execSQL("CREATE TABLE PRODUCTS (id TEXT PRIMARY KEY,name TEXT, price TEXT);");
+       }
     }
 
+    //INSERT INTO register (id, name, username, password) VALUES (`$1`
+    // SELECT id FROM register WHERE id=$1;
     public boolean register(String name, String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
