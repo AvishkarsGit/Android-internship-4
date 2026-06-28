@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="Enter image link"
+        android:id="@+id/edtCourseImage"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="Enter course title"
+        android:id="@+id/edtCourseTitle"
+        android:layout_below="@id/edtCourseImage"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="Enter course price"
+        android:id="@+id/edtCoursePrice"
+        android:layout_below="@id/edtCourseTitle"/>
+
+    <Button
+        android:id="@+id/btnAddAndEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_below="@id/edtCoursePrice"
+        android:background="@drawable/btn_design"
+        android:textColor="@color/white"
+        android:layout_marginBottom="5dp"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
