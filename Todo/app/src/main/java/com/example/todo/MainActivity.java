@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.helper.DatabaseHelper;
 import com.example.todo.model.TodoModel;
@@ -29,12 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper helper;
     private ArrayList<TodoModel> todoList;
-    private EditText edtTask;
-    private Button btnAddTodo;
+    public EditText edtTask;
+    public Button btnAddTodo;
     //private LinearLayout container_layout;
 
-    private ListView listView;
-    private ArrayList<String> taskList;
+//    private ListView listView;
+    private RecyclerView todoRv;
+    private TodoAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,34 +53,39 @@ public class MainActivity extends AppCompatActivity {
         //init comp
         initComp();
 
-        btnAddTodo.setOnClickListener(v-> {
-            //get task from edit text
-            String task = edtTask.getText().toString().trim();
-            boolean isAdded = helper.addTodo(task);
-            if (isAdded) {
-                Toast.makeText(this, "Todo Added...", Toast.LENGTH_SHORT).show();
-                getAllTodos();
-            }
-            else {
-                Toast.makeText(this, "failed to add todo", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
         //update todos
 //        updateTodo();
 //        deleteTodo();
         getAllTodos();
 
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int index, long id) {
-               String selected = taskList.get(index);
-                Toast.makeText(MainActivity.this, "selected:"+selected, Toast.LENGTH_SHORT).show();
+        btnAddTodo.setOnClickListener(v-> {
+            String btnText = btnAddTodo.getText().toString();
+            if (btnText.equals("Add Todo")) {
+                //addition
+                addTodo();
             }
         });
 
 
+    }
+
+    private void addTodo()
+    {
+        //get task from edit text
+        String task = edtTask.getText().toString().trim();
+        String id = Utils.generateUUID();
+        TodoModel model = new TodoModel(id,task,false);
+        boolean isAdded = helper.addTodo(model);
+        if (isAdded) {
+            Toast.makeText(this, "Todo Added...", Toast.LENGTH_SHORT).show();
+            todoList.add(model);
+            adapter.notifyItemInserted(todoList.size());
+        }
+        else {
+            Toast.makeText(this, "failed to add todo", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initComp()
@@ -85,35 +94,27 @@ public class MainActivity extends AppCompatActivity {
         todoList = new ArrayList<>();
         edtTask = findViewById(R.id.edtTask);
         btnAddTodo = findViewById(R.id.btnAddTodo);
-        listView = findViewById(R.id.listview);
+        todoRv = findViewById(R.id.todoRv);
+        todoRv.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void getAllTodos() {
         todoList = helper.getAllTodos();
-        taskList = new ArrayList<>();
-        for (int i=0;i<todoList.size();i++) {
-            TodoModel model = todoList.get(i);
-            taskList.add(model.getTask());
-        }
-        ArrayAdapter<String> tasksAdapter = new ArrayAdapter<>(
-                MainActivity.this,
-                android.R.layout.simple_list_item_1,
-                taskList
-        );
-        listView.setAdapter(tasksAdapter);
-
+        adapter = new TodoAdapter(MainActivity.this,todoList,MainActivity.this);
+        todoRv.setAdapter(adapter);
     }
 
-    private void updateTodo() {
-        String id = "fdcc6aca-5077-4dc3-ad30-66253388dc46";
-        boolean isUpdated = helper.updateTodo(id,"To See Recycler View",true);
-        if (isUpdated) {
-            Toast.makeText(this, "Todo updated", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(this, "Failed to update todo", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    public void updateTodo(String id) {
+//        String task = edtTask.getText().toString();
+//        TodoModel model = new TodoModel(id,task,false);
+//        boolean isUpdated = helper.updateTodo(model);
+//        if (isUpdated) {
+//            Toast.makeText(this, "Todo updated", Toast.LENGTH_SHORT).show();
+//        }
+//        else {
+//            Toast.makeText(this, "Failed to update todo", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void deleteTodo() {
         String id = "a437473d-cd9d-45da-889c-9db42bad6407";

@@ -32,12 +32,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean addTodo(String task) {
-        String id = UUID.randomUUID().toString(); //generate uuid
+    public boolean addTodo(TodoModel model) {
+
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(Utils.COL_ID,id);
-        cv.put(Utils.COL_TASK,task);
+        cv.put(Utils.COL_ID,model.getId());
+        cv.put(Utils.COL_TASK,model.getTask());
         cv.put(Utils.COL_IS_COMPLETED,0);
         long result = db.insert(Utils.TABLE_NAME,null,cv);
         return result != -1;
@@ -70,16 +70,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // doGet() -> @GetMapper()
     // doPost() -> @PostMapper()
 
-    public boolean updateTodo(String id, String task, boolean isCompleted) {
+    public boolean updateTodo(TodoModel model) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv =new ContentValues();
-        cv.put(Utils.COL_TASK,task);
-        cv.put(Utils.COL_IS_COMPLETED, isCompleted ? 1 : 0);
+        cv.put(Utils.COL_TASK,model.getTask());
+        cv.put(Utils.COL_IS_COMPLETED, model.isCompletion() ? 1 : 0);
         int result = db.update(
                 Utils.TABLE_NAME,
                 cv,
                 Utils.COL_ID+" = ?",
-                new String[]{id}
+                new String[]{model.getId()}
                 //fdcc6aca-5077-4dc3-ad30-66253388dc46
         );
 //      update todos set task="project" and isCompleted=1 where id="34y3478";
